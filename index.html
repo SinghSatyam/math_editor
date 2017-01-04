@@ -1,0 +1,68 @@
+<html>
+<head>
+<link href="MathquillBasedEditor/lib/mathquill.css" rel="stylesheet">
+<link href="MathquillBasedEditor/lib/matheditor.css" rel="stylesheet">
+</head>
+<body style="background:#F6F4F4">
+  <div id="answer"></div>
+  <button id='ok' class="btn">Ok</button>
+  <button id='cancel' class="btn">Cancel</button>
+</body>
+
+<style type="text/css">
+  .btn{
+    margin-top: 10px;
+    width: 80px;
+    padding: 3px;
+    color: #428bca;
+    background: transparent;
+    border: 2px solid #428bca;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+  }
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="MathquillBasedEditor/lib/mathquill.min.js"></script>
+<script src="MathquillBasedEditor/lib/matheditor.js"></script>
+<script type="text/javascript">
+  var me = new MathEditor('answer');
+  me.styleMe({
+    width: $(window).width()-30,
+    height: $(window).height()-140
+  })
+  $( "#cancel" ).click(function() {
+    top.tinymce.activeEditor.windowManager.close();
+  });
+
+  $( "#ok" ).click(function() {
+    var tex = me.getLatex();
+    if(!tex){ return; } 
+    var url = "http://chart.apis.google.com/chart?cht=tx&chl=" + encodeURIComponent(tex);
+    toDataUrl(url, tex, function(base64Img) { 
+      top.tinymce.activeEditor.insertContent('<img src="'+base64Img+'" align="middle"/>');
+      top.tinymce.activeEditor.windowManager.close();
+    }) 
+  });
+
+function toDataUrl(url, tex, callback) {
+ var xhr = new XMLHttpRequest();
+ xhr.responseType = 'blob';
+ xhr.onload = function() {
+ var reader = new FileReader();
+ reader.onload = function(e) {
+    callback(e.target.result, {
+      alt: tex
+    });
+  };
+reader.readAsDataURL(xhr.response);
+ };
+ xhr.open('GET', url);
+ xhr.send();
+}
+
+
+</script>
+
+</html>
