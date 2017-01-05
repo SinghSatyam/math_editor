@@ -3,7 +3,7 @@
 <link href="MathquillBasedEditor/lib/mathquill.css" rel="stylesheet">
 <link href="MathquillBasedEditor/lib/matheditor.css" rel="stylesheet">
 </head>
-<body style="background:#F6F4F4">
+<body style="background:#F6F4F4" id='math_editor_body'>
   <div id="answer"></div>
   <button id='ok' class="btn">Ok</button>
   <button id='cancel' class="btn">Cancel</button>
@@ -27,11 +27,14 @@
 <script src="MathquillBasedEditor/lib/mathquill.min.js"></script>
 <script src="MathquillBasedEditor/lib/matheditor.js"></script>
 <script type="text/javascript">
+  var window_params = top.tinymce.activeEditor.windowManager.getParams();
+  var prefill_latex = window_params.prefill_latex;
   var me = new MathEditor('answer');
+  if(prefill_latex){me.setLatex(prefill_latex); } 
   me.styleMe({
     width: $(window).width()-30,
     height: $(window).height()-140
-  })
+  });
   $( "#cancel" ).click(function() {
     top.tinymce.activeEditor.windowManager.close();
   });
@@ -41,7 +44,7 @@
     if(!tex){ return; } 
     var url = "http://chart.apis.google.com/chart?cht=tx&chl=" + encodeURIComponent(tex);
     toDataUrl(url, tex, function(base64Img) { 
-      top.tinymce.activeEditor.insertContent('<img src="'+base64Img+'" align="middle"/>');
+      top.tinymce.activeEditor.insertContent('<img src="'+base64Img+'" class="matheditor-formula" data-latex="'+tex+'" align="middle" />');
       top.tinymce.activeEditor.windowManager.close();
     }) 
   });
@@ -61,7 +64,6 @@ reader.readAsDataURL(xhr.response);
  xhr.open('GET', url);
  xhr.send();
 }
-
 
 </script>
 
