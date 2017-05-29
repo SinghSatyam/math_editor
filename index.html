@@ -42,7 +42,7 @@
   $( "#ok" ).click(function() {
     var tex = me.getLatex();
     if(!tex){ return; } 
-    var url = "http://chart.apis.google.com/chart?cht=tx&chl=" + encodeURIComponent(tex);
+    var url = "https://chart.apis.google.com/chart?cht=tx&chl=" + encodeURIComponent(tex);
     toDataUrl(url, tex, function(base64Img) { 
       top.tinymce.activeEditor.insertContent('<img src="'+base64Img+'" class="matheditor-formula" data-latex="'+tex+'" align="middle" />');
       top.tinymce.activeEditor.windowManager.close();
